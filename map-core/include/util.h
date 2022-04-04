@@ -21,6 +21,11 @@ T reverse_bytes(T x)
     return x;
 }
 
+#if defined(_WIN32)
+std::string GBK_2_UTF8(std::string gbkStr);
+std::string UTF8_2_GBK(std::string utf8Str);
+#endif
+
 void enable_utf8_output();
 
 #endif //ZJMAP_UTIL_H
