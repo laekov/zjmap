@@ -21,4 +21,6 @@ T reverse_bytes(T x)
     return x;
 }
 
+void enable_utf8_output();
+
 #endif //ZJMAP_UTIL_H

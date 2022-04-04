@@ -9,8 +9,7 @@ add_subdirectory(glfw)
 include_directories(glfw/include)
 include_directories(glad/include)
 
-add_subdirectory(map-viewer)
-
-include_directories(map-viewer/include)
-
 add_subdirectory(map-core)
+include_directories(map-core/include)
+
+add_subdirectory(map-viewer)

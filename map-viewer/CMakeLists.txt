@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.21)
 
 include_directories(include)
 
-add_library(map-viewer STATIC include/map-viewer.h src/map-viewer.cpp)
+add_executable(map-viewer map_viewer.cpp)
 
-target_link_libraries(map-viewer PUBLIC glfw)
-
+target_link_libraries(map-viewer PUBLIC map-core)

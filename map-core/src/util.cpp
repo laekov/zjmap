@@ -18,11 +18,13 @@ FILE *open_file(const char *path, const char *mode) {
     return file;
 }
 
-
-
 #ifdef _WIN32
 #include <Windows.h>
-static BOOL console_utf8 = SetConsoleOutputCP(65001);
+void enable_utf8_output() {
+    SetConsoleOutputCP(65001);
+}
 #else
-static int32_t console_utf8 = 1;
+void enable_utf8_output() {
+    ;
+}
 #endif
