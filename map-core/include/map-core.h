@@ -17,6 +17,7 @@ struct RouteInfo
     int width;
     int funcclass;
     int speedclass;
+    int level;
 };
 
 struct Edge
@@ -29,7 +30,7 @@ struct Edge
 class MapCore
 {
 public:
-    void load_route(const char * path);
+    void load_route(const char *path, int level);
     void build_routes();
     RouteInfo get_route_info(int route_id);
     Coord get_junction(int junc_id);
@@ -42,6 +43,7 @@ public:
     BoundingBox get_boundaries();
     int find_nearest_junc(Coord p);
     void print_info();
+    static MapCore * get_instance();
 private:
     std::vector<std::vector<SHPPOINT>> routes;
     std::vector<RouteInfo> routes_info;

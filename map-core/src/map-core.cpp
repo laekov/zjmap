@@ -4,7 +4,7 @@
 
 #include "map-core.h"
 
-void MapCore::load_route(const char *path) {
+void MapCore::load_route(const char *path, int level) {
     std::string str_path = path;
     std::string csv_file_path = str_path + ".csv";
     std::string shp_file_path = str_path + ".shp";
@@ -24,6 +24,7 @@ void MapCore::load_route(const char *path) {
         rinfo.width = string_to_integer(width_list[i]);
         rinfo.speedclass = string_to_integer(speedclass_list[i]);
         rinfo.funcclass = string_to_integer(funcclass_list[i]);
+        rinfo.level = level;
         int direction = string_to_integer(direction_list[i]);
         if (direction == 1 || direction == 2){
             routes.push_back(file_routes[i]);
@@ -111,3 +112,10 @@ void MapCore::print_info() {
     printf("Junction XRange:           [%lf, %lf]\n", junc_bbox.x0, junc_bbox.x1);
     printf("Junction YRange:           [%lf, %lf]\n", junc_bbox.y0, junc_bbox.y1);
 }
+
+MapCore *MapCore::get_instance() {
+    static MapCore * core = nullptr;
+    if (!core) core = new MapCore;
+    return core;
+}
+
