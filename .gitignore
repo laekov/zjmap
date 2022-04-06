@@ -1,5 +1,7 @@
 cmake-build-*
 env/data
+env/data.zip
+env/fonts
 .vscode
 .idea
 .vs

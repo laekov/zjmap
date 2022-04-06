@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by zijia on 2022/4/4.
 //
 
@@ -18,7 +18,7 @@ int GLInit(int32_t width, int32_t height, GLFWwindow **window_ptr) {
 
     /* Create a windowed mode window and its OpenGL context */
     glfwWindowHint(GLFW_SAMPLES, 4);
-    window = glfwCreateWindow(width, height, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(width, height, u8"紫荆地图", NULL, NULL);
     if (!window)
     {
         glfwTerminate();

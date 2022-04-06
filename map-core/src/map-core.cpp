@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by zijia on 2022/4/4.
 //
 
@@ -45,8 +45,8 @@ void MapCore::build_routes() {
             pos.push_back(Coord{shppnt.X, shppnt.Y});
     junctions.build(pos, 0);
 
-    in_edges.reserve(junctions.size());
-    out_edges.reserve(junctions.size());
+    in_edges.resize(junctions.size());
+    out_edges.resize(junctions.size());
 
     for (int i = 0; i < routes.size(); i++)
     {
@@ -111,11 +111,69 @@ void MapCore::print_info() {
     auto junc_bbox = junctions.get_boundaries();
     printf("Junction XRange:           [%lf, %lf]\n", junc_bbox.x0, junc_bbox.x1);
     printf("Junction YRange:           [%lf, %lf]\n", junc_bbox.y0, junc_bbox.y1);
+    auto mark_bbox = marks.get_boundaries();
+    printf("POI Count:                 %d\n", (int)pois.size());
+    printf("Mark Count:                %d\n", (int)marks.size());
+    printf("Mark point XRange:         [%lf, %lf]\n", mark_bbox.x0, mark_bbox.x1);
+    printf("Mark point YRange:         [%lf, %lf]\n", mark_bbox.y0, mark_bbox.y1);
 }
 
 MapCore *MapCore::get_instance() {
     static MapCore * core = nullptr;
     if (!core) core = new MapCore;
     return core;
+}
+
+void MapCore::load_poi(const char *path) {
+    auto table = load_csv_table(path);
+    auto& names = table[u8"名称"];
+    auto& xcoords = table[u8"WGS84_经度"];
+    auto& ycoords = table[u8"WGS84_纬度"];
+
+    if (table.count(u8"地址"))
+    {
+        auto& addr = table[u8"地址"];
+        for (int i = 0; i < names.size(); i++)
+            if (names[i].size())
+                pois.push_back(POI{Coord{string_to_real(xcoords[i]), string_to_real(ycoords[i])}, names[i], addr[i]});
+    }
+    else
+        for (int i = 0; i < names.size(); i++)
+            if (names[i].size())
+                pois.push_back(POI{Coord{string_to_real(xcoords[i]), string_to_real(ycoords[i])}, names[i], ""});
+}
+
+void MapCore::build_pois() {
+    std::vector<Coord> mark_coords;
+    for (auto & poi : pois)
+        mark_coords.push_back(poi.coord);
+    marks.build(mark_coords, 0.0);
+    poi_ids.resize(marks.size());
+    for (int i = 0; i < pois.size(); i++)
+    {
+        int mark_id = marks.find_nearest(pois[i].coord);
+        if (pois[i].coord.x == 0.0 && pois[i].coord.y == 0.0)printf("%d %d (%lf, %lf) %s-%s\n", mark_id, i, pois[i].coord.x, pois[i].coord.y, pois[i].name.c_str(), pois[i].comment.c_str());
+        poi_ids[mark_id].push_back(i);
+    }
+}
+
+int MapCore::find_nearest_mark(Coord p) {
+    return marks.find_nearest(p);
+}
+
+int MapCore::mark_count() {
+    return marks.size();
+}
+
+Coord MapCore::get_mark(int mark_id) {
+    return marks[mark_id];
+}
+
+POI MapCore::get_poi(int poi_id) {
+    return pois[poi_id];
+}
+
+std::vector<int> MapCore::get_poi_ids(int mark_id) {
+    return poi_ids[mark_id];
 }
 

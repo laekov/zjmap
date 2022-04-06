@@ -16,11 +16,19 @@ std::vector<std::vector<std::string>> load_csv(const char *file_path) {
     std::string entry = "";
     std::vector<std::string> line;
 
+    bool lock = false;
     do
     {
         c = fgetc(file);
-        if (c == '\r') continue;
-        if (c == '\n' ||  c == ',' || c == -1 || c == 0)
+        if (c == '\"'){
+            if (entry == "" || lock)
+            {
+                lock = !lock;
+                continue;
+            }
+        }
+        if (c == '\r' && !lock) continue;
+        if ((c == '\n' ||  c == ',' || c == -1 || c == 0) && !lock)
         {
             line.push_back(entry);
             entry = "";

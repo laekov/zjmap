@@ -13,4 +13,6 @@ add_subdirectory(map-core)
 include_directories(map-core/include)
 add_subdirectory(glad)
 
+add_subdirectory(freetype)
+include_directories(freetype/include)
 add_subdirectory(map-viewer)

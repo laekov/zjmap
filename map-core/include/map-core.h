@@ -27,21 +27,35 @@ struct Edge
     int route_id;
 };
 
+struct POI // Point Of Interest
+{
+    Coord coord;
+    std::string name;
+    std::string comment;
+};
+
 class MapCore
 {
 public:
     void load_route(const char *path, int level);
     void build_routes();
+    void load_poi(const char * path);
+    void build_pois();
     RouteInfo get_route_info(int route_id);
     Coord get_junction(int junc_id);
+    Coord get_mark(int mark_id);
+    POI get_poi(int poi_id);
     Edge get_edge(int edge_id);
+    std::vector<int> get_poi_ids(int mark_id);
     std::vector<int> get_in_edges_id(int junc_id);
     std::vector<int> get_out_edges_id(int junc_id);
     int route_count();
     int junction_count();
     int edge_count();
+    int mark_count();
     BoundingBox get_boundaries();
     int find_nearest_junc(Coord p);
+    int find_nearest_mark(Coord p);
     void print_info();
     static MapCore * get_instance();
 private:
@@ -51,6 +65,10 @@ private:
     std::vector<Edge> edges;
     std::vector<std::vector<int>> out_edges;
     std::vector<std::vector<int>> in_edges;
+
+    CoordManager marks;
+    std::vector<std::vector<int>> poi_ids;
+    std::vector<POI> pois;
 
     void insert_edge(Coord start, Coord end, int route_id);
 };
