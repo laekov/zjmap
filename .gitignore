@@ -1,6 +1,4 @@
 cmake-build-*
-env/data
-env/fonts
 env/*.zip
 .vscode
 .idea
