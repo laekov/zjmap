@@ -4,4 +4,4 @@ include_directories(include)
 
 add_executable(project0 project0.cpp)
 
-target_link_libraries(map-core)
+target_link_libraries(project0 PUBLIC map-core)
