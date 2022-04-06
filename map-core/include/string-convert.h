@@ -9,6 +9,7 @@
 #include <cwchar>
 #include <string>
 #include <cstdio>
+#include <cmath>
 
 std::wstring utf8_to_unicode(std::string cstr);
 

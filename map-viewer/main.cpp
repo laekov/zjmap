@@ -39,5 +39,5 @@ int main()
     core->build_pois();
     core->print_info();
 
-    MapViewer::get_instance()->Run();
+    //MapViewer::get_instance()->Run();
 }

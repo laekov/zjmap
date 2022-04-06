@@ -8,6 +8,7 @@
 #include "shapefile.h"
 #include <map>
 #include <algorithm>
+#include <cmath>
 
 struct Coord
 {
@@ -49,7 +50,7 @@ public:
     int find(Coord p);
     int find_nearest(Coord p);
     int insert(Coord p);
-    void build(std::vector<Coord> pos, double approx_ = 0.0);
+    void build(std::vector<Coord> &pos, double approx_ = 0.0);
     void clear();
     int size() const;
     BoundingBox get_boundaries();
@@ -69,7 +70,7 @@ private:
     void insert(int &x, int y);
     void maintain(int x);
 
-    void build(int &x, std::vector<Coord> pos, int cut = 0);
+    void build(int &x, std::vector<Coord> &pos, int cut = 0);
 };
 
 #endif //ZJMAP_COORDINATE_H

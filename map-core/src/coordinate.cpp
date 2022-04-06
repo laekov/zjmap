@@ -196,7 +196,7 @@ void CoordManager::maintain(int x) {
             bvh[x].bbox = merge(bvh[x].bbox, bvh[bvh[x].ch[i]].bbox);
 }
 
-void CoordManager::build(std::vector<Coord> pos, double approx_) {
+void CoordManager::build(std::vector<Coord> &pos, double approx_) {
     approx = approx_;
     root = -1;
     bvh.clear();
@@ -204,20 +204,31 @@ void CoordManager::build(std::vector<Coord> pos, double approx_) {
     build(root, pos);
 }
 
-void CoordManager::build(int &x, std::vector<Coord> pos, int cut) {
+void CoordManager::build(int &x, std::vector<Coord> &pos, int cut) {
     if (!pos.size()) return;
     if (cut)
         std::sort(pos.begin(), pos.end(), [](Coord p1, Coord p2) -> bool {return p1.x < p2.x;});
     else
         std::sort(pos.begin(), pos.end(), [](Coord p1, Coord p2) -> bool {return p1.y < p2.y;});
-    int m = pos.size() / 2;
-    bvh.push_back(tree_node{pos[m], BoundingBox(pos[m]), -1, -1, -1, -1});
+    int m = pos.size() / 2; auto mp = pos[m];
+    bvh.push_back(tree_node{mp, BoundingBox(mp), -1, -1, -1, -1});
     x = bvh.size() - 1;
     std::vector<Coord> subtrees[4];
+
+    uint32_t cnt_subtree[4] = {};
+
+//    for (Coord p: pos)
+//    {
+//        if (hamilton_dist(p, pos[m]) > approx)
+//            cnt_subtree[relative_pos(pos[m], p)]++;
+//    }
+//    for (int i = 0; i < 4; i++)
+//        subtrees[i].reserve(cnt_subtree[i]);
+
     for (Coord p: pos)
     {
-        if (hamilton_dist(p, pos[m]) > approx)
-            subtrees[relative_pos(pos[m], p)].push_back(p);
+        if (hamilton_dist(p, mp) > approx)
+            subtrees[relative_pos(mp, p)].push_back(p);
     }
     build(bvh[x].ch[0], subtrees[0], 1 - cut);
     build(bvh[x].ch[1], subtrees[1], 1 - cut);

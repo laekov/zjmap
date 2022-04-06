@@ -9,6 +9,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <cstdio>
+#include <util.h>
 
 template<class glFunc, class ...glArgs>
 int GRLOpenGLFunctionCall(const char* code, const char* file, int line, glFunc&& func, glArgs && ...args)

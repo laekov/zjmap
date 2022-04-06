@@ -47,8 +47,7 @@ int GLInit(int32_t width, int32_t height, GLFWwindow **window_ptr) {
 uint32_t CompileShaderFromFile(const char * shader_file_path, uint32_t shader_type)
 {
     uint32_t shader = glCreateShader(shader_type);
-    FILE * file;
-    fopen_s(&file, shader_file_path, "rb");
+    FILE * file = open_file(shader_file_path, "rb");
     if (!file) return shader;
     fseek(file, 0, SEEK_END);
     int32_t file_size = ftell(file);
