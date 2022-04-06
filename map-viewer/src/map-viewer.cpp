@@ -66,18 +66,24 @@ void MapViewer::Run() {
         static float present_visible[10] = {};
         float target_visible[10] = {};
 
-        if (zoom_scale <= 0.001) target_visible[6] = 1.0;
-        if (zoom_scale <= 0.002) target_visible[5] = 1.0;
-        if (zoom_scale <= 0.007) target_visible[4] = 1.0;
-        if (zoom_scale <= 0.02) target_visible[3] = 1.0;
-        if (zoom_scale <= 0.07) target_visible[2] = 1.0;
+        if (zoom_scale <= 0.001f) target_visible[6] = 1.0;
+        if (zoom_scale <= 0.002f) target_visible[5] = 1.0;
+        if (zoom_scale <= 0.007f) target_visible[4] = 1.0;
+        if (zoom_scale <= 0.02f) target_visible[3] = 1.0;
+        if (zoom_scale <= 0.07f) target_visible[2] = 1.0;
         target_visible[1] = 1.0;
+
+        static auto time_stamp = std::chrono::steady_clock::now();
+        auto new_stamp = std::chrono::steady_clock::now();
 
         for (int i = 0; i < 10; i++)
         {
-            if (target_visible[i] > present_visible[i]) present_visible[i] += 1.0 / 64.0;
-            if (target_visible[i] < present_visible[i]) present_visible[i] -= 1.0 / 64.0;
+            float max_modify = ((new_stamp - time_stamp) / std::chrono::milliseconds (1)) * 0.002;
+
+            if (target_visible[i] > present_visible[i]) present_visible[i] += std::min((target_visible[i] - present_visible[i]), max_modify);
+            if (target_visible[i] < present_visible[i]) present_visible[i] -= std::min((present_visible[i] - target_visible[i]), max_modify);
         }
+        time_stamp = new_stamp;
 
         glcall(glProgramUniform1f, program, uniform_visible_level, present_visible[6]); if (present_visible[6]) DrawLayer(layer_walk);
         glcall(glProgramUniform1f, program, uniform_visible_level, present_visible[5]); if (present_visible[5]) DrawLayer(layer_road5);
