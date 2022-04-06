@@ -6,7 +6,7 @@
 
 FILE *open_file(const char *path, const char *mode) {
     FILE * file;
-#ifdef _MSC_VER
+#ifdef _WIN32
 
     fopen_s(&file, UTF8_2_GBK(path).c_str(), mode);
 #else
