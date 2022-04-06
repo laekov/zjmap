@@ -10,6 +10,7 @@
 #include "string-convert.h"
 #include "util.h"
 #include "coordinate.h"
+#include <chrono>
 
 struct RouteInfo
 {
@@ -37,6 +38,7 @@ struct POI // Point Of Interest
 class MapCore
 {
 public:
+    MapCore();
     void load_route(const char *path, int level);
     void build_routes();
     void load_poi(const char * path);
@@ -58,6 +60,7 @@ public:
     int find_nearest_mark(Coord p);
     void print_info();
     static MapCore * get_instance();
+    std::vector<POI> get_nearest_pois(Coord coord);
 private:
     std::vector<std::vector<SHPPOINT>> routes;
     std::vector<RouteInfo> routes_info;
@@ -69,7 +72,8 @@ private:
     CoordManager marks;
     std::vector<std::vector<int>> poi_ids;
     std::vector<POI> pois;
-
+    std::chrono::steady_clock::time_point start_loading_time;
+    std::chrono::steady_clock::time_point end_build_time;
     void insert_edge(Coord start, Coord end, int route_id);
 };
 

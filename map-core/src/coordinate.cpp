@@ -250,7 +250,7 @@ BoundingBox CoordManager::get_boundaries() {
 
 int CoordManager::find_nearest(Coord p) {
     int ret = -1;
-    double dist = INFINITY;
+    double dist = 1e100;
     find(root, p, ret, dist);
     return ret;
 }

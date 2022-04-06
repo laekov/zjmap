@@ -50,11 +50,19 @@ struct SHPCONTENTHEADER
 
 struct SHPPOINT
 {
-    double X, Y;
+    double x, y;
 };
 
 #pragma pack ()
 
 std::vector<std::vector<SHPPOINT>> load_shapefile(const char * file_path);
+
+SHPPOINT WGS84_to_GCJ02(SHPPOINT coord);
+
+SHPPOINT GCJ02_to_WGS84(SHPPOINT coord);
+
+SHPPOINT GCJ02_to_BD09(SHPPOINT coord);
+
+SHPPOINT BD09_to_GCJ02(SHPPOINT coord);
 
 #endif //ZJMAP_SHAPEFILE_H

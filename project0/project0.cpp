@@ -1,15 +1,13 @@
-﻿//
-// Created by zijia on 2022/4/4.
+//
+// Created by lvzijian on 2022/4/6.
 //
 
-#include "map-viewer.h"
+#include <map-core.h>
 
 int main()
 {
     enable_utf8_output();
-
-    MapCore *core = MapCore::get_instance();
-
+    auto core = MapCore::get_instance();
     core->load_route(u8"data/北京路网/九级路", 2);
     core->load_route(u8"data/北京路网/高速", 4);
     core->load_route(u8"data/北京路网/行人道路", 0);
@@ -38,6 +36,4 @@ int main()
     core->load_poi(u8"data/北京POI/餐饮.csv");
     core->build_pois();
     core->print_info();
-
-    MapViewer::get_instance()->Run();
 }

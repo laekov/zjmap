@@ -69,7 +69,10 @@ namespace Grassland
 					res[i] = buffer;
 				}
 
-				if (max_comp < EPS<T>()) return res;
+				if (max_comp < EPS<T>())
+                {
+                    return res;
+                }
 
 				max_comp = mat[i][i];
 				for (int j = i; j < N; j++)
@@ -77,7 +80,7 @@ namespace Grassland
 				for (int j = 0; j < N; j++)
 					res[i][j] /= max_comp;
 				for (int j = i + 1; j < N; j++)
-					if (abs(mat[j][i]) > EPS<T>())
+					if (std::abs(mat[j][i]) > EPS<T>())
 						max_comp = mat[j][i],
 						mat[j] -= mat[i] * max_comp,
 						res[j] -= res[i] * max_comp;
@@ -86,10 +89,14 @@ namespace Grassland
 			{
 				T a;
 				for (int j = i - 1; j >= 0; j--)
-					if (abs(mat[j][i]) > EPS<T>())
-						a = mat[j][i],
-						mat[j] -= mat[i] * a,
-						res[j] -= res[i] * a;
+                {
+                    if (std::abs(mat[j][i]) > EPS<T>())
+                    {
+                        a = mat[j][i],
+                        mat[j] -= mat[i] * a,
+                        res[j] -= res[i] * a;
+                    }
+                }
 			}
 			return res;
 		}

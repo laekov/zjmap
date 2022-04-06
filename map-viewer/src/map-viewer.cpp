@@ -16,8 +16,8 @@ void MapViewer::Run() {
     glfwSwapInterval(1);
 
     BoundingBox bbox = core->get_boundaries();
-    focus_point = GRLVec2 ();//GRLVec2 ((bbox.x0 + bbox.x1) * 0.5, (bbox.y0 + bbox.y1) * 0.5);
-    zoom_scale = 0.1; //
+    focus_point = GRLVec2 (-0.140501, -0.247258);//GRLVec2 ((bbox.x0 + bbox.x1) * 0.5, (bbox.y0 + bbox.y1) * 0.5);
+    zoom_scale = 0.002; //
     lat_scale = std::cos(Math::radian((bbox.y0 + bbox.y1) * 0.5));
     uint32_t fragment_shader = CompileShaderFromFile(u8"shader/frag.glsl", GL_FRAGMENT_SHADER);
     uint32_t vertex_shader = CompileShaderFromFile(u8"shader/vert.glsl", GL_VERTEX_SHADER);
@@ -34,7 +34,7 @@ void MapViewer::Run() {
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     PrepareAssets();
 
-    text_manager.Init("fonts/NotoSansSC-Regular.otf", nullptr, 32,0);
+    text_manager.Init("fonts/NotoSansSC-Regular.otf", nullptr, 20,0);
 
     while (!ShouldClose())
     {
@@ -86,7 +86,17 @@ void MapViewer::Run() {
         glcall(glProgramUniform1f, program, uniform_visible_level, present_visible[2]); if (present_visible[2]) DrawLayer(layer_road2);
         glcall(glProgramUniform1f, program, uniform_visible_level, present_visible[1]); if (present_visible[1]) DrawLayer(layer_road1);
 
-        text_manager.DrawText(0, 32, L"我爱你，中国 Hello, World!");
+        double xcurpos, ycurpos;
+        glfwGetCursorPos(window, &xcurpos, &ycurpos);
+        xcurpos /= (double)wnd_width;
+        ycurpos /= (double)wnd_height;
+        xcurpos = xcurpos * 2.0 - 1.0;
+        ycurpos = -(ycurpos * 2.0 - 1.0);
+
+        auto cursor_coord = mat_cam.inverse() * GRLVec4(xcurpos, ycurpos, 0.0, 1.0);
+        auto query_vec = center + GRLVec2d(cursor_coord[0], cursor_coord[1]);
+        Coord query_coord{query_vec[0], query_vec[1]};
+        PrintPOIInfo(core->get_nearest_pois(query_coord));
         FlushScreen();
     }
 }
@@ -100,7 +110,7 @@ void MapViewer::PrepareAssets() {
 
 
     BoundingBox bbox = core->get_boundaries();
-    GRLVec2d center((bbox.x0 + bbox.x1) * 0.5, (bbox.y0 + bbox.y1) * 0.5);
+    center = GRLVec2d((bbox.x0 + bbox.x1) * 0.5, (bbox.y0 + bbox.y1) * 0.5);
 
 
     layer_road1 = BuildLayer([](RouteInfo route_info)->bool { return route_info.funcclass == 1 && route_info.level;});
@@ -118,7 +128,6 @@ void MapViewer::PrepareAssets() {
 
 void MapViewer::ScrollFun(GLFWwindow *window, double x, double y) {
     MapViewer::get_instance()->zoom_scale *= std::pow(0.5, y*0.1);
-    std::cout << "zoom_scale" << MapViewer::get_instance()->zoom_scale << std::endl;
 }
 
 void MapViewer::CurPosFun(GLFWwindow *window, double xpos, double ypos) {
@@ -136,7 +145,6 @@ MapViewer::RoadLayer MapViewer::BuildLayer(bool (*sel_func)(RouteInfo)) {
     std::vector<uint32_t> indices;
 
     BoundingBox bbox = core->get_boundaries();
-    GRLVec2d center((bbox.x0 + bbox.x1) * 0.5, (bbox.y0 + bbox.y1) * 0.5);
 
     for (int i = 0; i < core->edge_count(); i++)
     {
@@ -228,4 +236,15 @@ void MapViewer::DrawLayer(MapViewer::RoadLayer road_layer) {
     glcall(glEnableVertexAttribArray, 6);
     glcall(glEnableVertexAttribArray, 7);
     glcall(glDrawElements, GL_TRIANGLES, road_layer.num_index, GL_UNSIGNED_INT, (void*)0);
+}
+
+void MapViewer::PrintPOIInfo(std::vector<POI> pois) {
+    int text_y = 30;
+    for (auto poi : pois)
+    {
+        char str[1024];
+        sprintf(str, "%s-%s", poi.name.c_str(), poi.comment.c_str());
+        text_manager.DrawText(10, text_y, utf8_to_unicode(str));
+        text_y += 20;
+    }
 }

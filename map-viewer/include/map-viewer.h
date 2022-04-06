@@ -9,6 +9,8 @@
 #include "glutil.h"
 #include "Grassland/Math/Math.h"
 #include "text-manager.h"
+#include <sstream>
+
 using namespace Grassland;
 
 class MapViewer
@@ -40,6 +42,7 @@ private:
     GRLMat4 mat_screen;
     MapCore * core;
     float lat_scale;
+    GRLVec2d center;
 
     struct RoadLayer
     {
@@ -59,6 +62,7 @@ private:
     void PrepareAssets();
     RoadLayer BuildLayer(bool (*sel_func)(RouteInfo));
     static void DrawLayer(RoadLayer road_layer);
+    void PrintPOIInfo(std::vector<POI> pois);
 };
 
 #endif //ZJMAP_MAP_VIEWER_H

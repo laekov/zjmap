@@ -16,3 +16,5 @@ add_subdirectory(glad)
 add_subdirectory(freetype)
 include_directories(freetype/include)
 add_subdirectory(map-viewer)
+
+add_subdirectory(project0)
