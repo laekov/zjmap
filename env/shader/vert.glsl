@@ -30,7 +30,7 @@ void main()
     direct.x * vs_rotation[0] + direct.y * vs_rotation[1],
     direct.x * vs_rotation[2] + direct.y * vs_rotation[3]
     );
-    gl_Position = coord1 + vec4(direct, 0.0, 0.0) * vs_width * screen_trans * zoom_scale;
+    gl_Position = coord1 + vec4(direct, 0.0, 0.0) * vs_width * screen_trans * zoom_scale * 0.5;
     fs_color = vs_color;
 }
 
