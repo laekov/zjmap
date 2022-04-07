@@ -4,3 +4,6 @@ env/*.zip
 .idea
 .vs
 build
+lfs
+hooks
+CMakeSettings.json
